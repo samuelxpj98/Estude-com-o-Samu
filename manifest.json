@@ -1,0 +1,25 @@
+
+{
+  "name": "Estude com o Samu",
+  "short_name": "Samu Estudo",
+  "description": "App de Flashcards para Seminaristas Batistas",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#101622",
+  "theme_color": "#135bec",
+  "icons": [
+    {
+      "src": "https://img.icons8.com/color/192/storytelling.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://img.icons8.com/color/512/storytelling.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "orientation": "portrait"
+}
