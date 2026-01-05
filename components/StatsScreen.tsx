@@ -13,10 +13,10 @@ const StatsScreen: React.FC<StatsScreenProps> = ({ topics, userStats }) => {
   const chartData = ACTIVITY_DATA.map(d => d.isToday ? { ...d, cards: userStats.cardsToday } : d);
 
   return (
-    <div className="flex flex-col h-full bg-background-light dark:bg-background-dark">
+    <div className="flex flex-col h-full bg-background-light dark:bg-background-dark animate-page-transition">
       {/* Top App Bar */}
       <div className="sticky top-0 z-50 flex items-center bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md p-4 justify-between border-b border-gray-200 dark:border-white/5">
-        <h2 className="text-xl font-bold leading-tight tracking-tight">Progresso Teológico</h2>
+        <h2 className="text-xl font-bold leading-tight tracking-tight">Estatísticas</h2>
         <div className="flex items-center gap-2 bg-orange-500/10 px-3 py-1 rounded-full border border-orange-500/20">
           <span className="material-symbols-outlined text-orange-500 text-[18px] fill-1">local_fire_department</span>
           <span className="text-sm font-bold text-orange-600 dark:text-orange-400">{userStats.streak} acessos</span>
@@ -70,17 +70,17 @@ const StatsScreen: React.FC<StatsScreenProps> = ({ topics, userStats }) => {
             <h3 className="text-lg font-black uppercase tracking-tighter">Domínio Teológico</h3>
             
             {/* Legenda das Cores */}
-            <div className="flex gap-4">
+            <div className="flex flex-wrap gap-x-4 gap-y-2 bg-gray-50 dark:bg-white/5 p-3 rounded-2xl border border-gray-100 dark:border-white/5">
               <div className="flex items-center gap-1.5">
-                <div className="w-2.5 h-2.5 rounded-full bg-red-500"></div>
-                <span className="text-[9px] font-black uppercase text-gray-500 tracking-wider">Erro</span>
+                <div className="w-3 h-3 rounded-full bg-red-500 shadow-sm"></div>
+                <span className="text-[9px] font-black uppercase text-gray-500 tracking-wider">Errei</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <div className="w-2.5 h-2.5 rounded-full bg-orange-500"></div>
+                <div className="w-3 h-3 rounded-full bg-orange-500 shadow-sm"></div>
                 <span className="text-[9px] font-black uppercase text-gray-500 tracking-wider">Revisar</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <div className="w-2.5 h-2.5 rounded-full bg-primary"></div>
+                <div className="w-3 h-3 rounded-full bg-primary shadow-sm"></div>
                 <span className="text-[9px] font-black uppercase text-gray-500 tracking-wider">Domínio</span>
               </div>
             </div>
@@ -106,15 +106,15 @@ const StatsScreen: React.FC<StatsScreenProps> = ({ topics, userStats }) => {
 
 const TopicMasteryCard: React.FC<{ topic: Topic }> = ({ topic }) => {
   const { wrong, review, correct } = topic.stats;
-  const totalIniciado = wrong + review + correct;
-  const totalApp = topic.total || 1; 
+  const totalRevisado = wrong + review + correct;
+  const totalNoBanco = topic.total || 1; 
   
-  const pWrong = (wrong / totalApp) * 100;
-  const pReview = (review / totalApp) * 100;
-  const pCorrect = (correct / totalApp) * 100;
+  const pWrong = (wrong / totalNoBanco) * 100;
+  const pReview = (review / totalNoBanco) * 100;
+  const pCorrect = (correct / totalNoBanco) * 100;
 
   return (
-    <div className="p-4 rounded-2xl bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/5">
+    <div className="p-4 rounded-2xl bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/5 shadow-sm">
       <div className="flex justify-between items-start mb-3">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-lg bg-gray-50 dark:bg-white/5 flex items-center justify-center">
@@ -122,18 +122,18 @@ const TopicMasteryCard: React.FC<{ topic: Topic }> = ({ topic }) => {
           </div>
           <div className="max-w-[180px]">
             <h4 className="text-xs font-black uppercase leading-none truncate mb-1">{topic.name}</h4>
-            <p className="text-[9px] text-gray-500 font-bold uppercase tracking-widest">{totalIniciado} revisões feitas</p>
+            <p className="text-[9px] text-gray-500 font-bold uppercase tracking-widest">{totalRevisado} revisões</p>
           </div>
         </div>
         <div className="text-right">
-          <span className="text-[10px] font-black text-primary uppercase">{Math.min(100, Math.round((correct/totalApp)*100))}%</span>
+          <span className="text-[10px] font-black text-primary uppercase">{Math.min(100, Math.round((correct/totalNoBanco)*100))}%</span>
         </div>
       </div>
       
-      <div className="w-full h-1.5 bg-gray-100 dark:bg-white/5 rounded-full overflow-hidden flex">
-        <div className="h-full bg-red-500 transition-all duration-500" style={{ width: `${Math.min(100, pWrong)}%` }}></div>
-        <div className="h-full bg-orange-500 transition-all duration-500" style={{ width: `${Math.min(100, pReview)}%` }}></div>
-        <div className="h-full bg-primary transition-all duration-500" style={{ width: `${Math.min(100, pCorrect)}%` }}></div>
+      <div className="w-full h-2 bg-gray-100 dark:bg-white/5 rounded-full overflow-hidden flex shadow-inner">
+        <div className="h-full bg-red-500 transition-all duration-700" style={{ width: `${Math.min(100, pWrong)}%` }}></div>
+        <div className="h-full bg-orange-500 transition-all duration-700" style={{ width: `${Math.min(100, pReview)}%` }}></div>
+        <div className="h-full bg-primary transition-all duration-700" style={{ width: `${Math.min(100, pCorrect)}%` }}></div>
       </div>
     </div>
   );

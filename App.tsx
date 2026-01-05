@@ -82,16 +82,18 @@ const App: React.FC = () => {
         setIsLoading(true);
         const cloudData = await getUserDataCloud(u.uid);
         
-        let currentStats = userStats;
+        let statsFromCloud = userStats;
+        let profileFromCloud = userProfile;
+        let topicsFromCloud = topics;
 
         if (cloudData) {
-          if (cloudData.profile) setUserProfile(cloudData.profile);
-          if (cloudData.stats) currentStats = cloudData.stats;
+          if (cloudData.profile) profileFromCloud = cloudData.profile;
+          if (cloudData.stats) statsFromCloud = cloudData.stats;
           if (cloudData.topics) {
-            setTopics(prev => prev.map(t => {
+            topicsFromCloud = topics.map(t => {
               const cloudTopic = cloudData.topics.find((ct: any) => ct.id === t.id);
               return cloudTopic ? { ...t, stats: cloudTopic.stats } : t;
-            }));
+            });
           }
         }
 
@@ -99,19 +101,24 @@ const App: React.FC = () => {
         const now = Date.now();
         const thirtyMinutesInMs = 30 * 60 * 1000;
         
-        if (now - currentStats.lastAccessTimestamp > thirtyMinutesInMs) {
+        if (now - statsFromCloud.lastAccessTimestamp > thirtyMinutesInMs) {
           const updatedStats = {
-            ...currentStats,
-            streak: currentStats.streak + 1,
+            ...statsFromCloud,
+            streak: statsFromCloud.streak + 1,
             lastAccessTimestamp: now,
             lastLoginDate: new Date().toISOString().split('T')[0]
           };
           setUserStats(updatedStats);
+          // Salva imediatamente a atualização do streak
+          saveUserDataCloud(u.uid, { stats: updatedStats, updatedAt: new Date().toISOString() });
         } else {
-          setUserStats(currentStats);
+          setUserStats(statsFromCloud);
         }
 
+        setUserProfile(profileFromCloud);
+        setTopics(topicsFromCloud);
         setIsDataReady(true);
+        
         if (currentScreen === Screen.Welcome || currentScreen === Screen.Auth) {
           setCurrentScreen(Screen.Topics);
         }
@@ -125,6 +132,7 @@ const App: React.FC = () => {
     return () => unsubscribe();
   }, []);
 
+  // Sincronização automática para alterações de progresso de estudo e perfil
   useEffect(() => {
     if (user && isDataReady) {
       const timer = setTimeout(async () => {
@@ -134,7 +142,7 @@ const App: React.FC = () => {
           topics: topics,
           updatedAt: new Date().toISOString()
         });
-      }, 1500);
+      }, 2000);
       return () => clearTimeout(timer);
     }
   }, [userProfile, userStats, topics, user, isDataReady]);
