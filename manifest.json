@@ -1,7 +1,7 @@
 
 {
-  "name": "Estude com o Samu",
-  "short_name": "Samu Estudo",
+  "name": "Estude com Samu",
+  "short_name": "Estude com Samu",
   "description": "App de Flashcards para Seminaristas Batistas",
   "start_url": "./index.html",
   "display": "standalone",

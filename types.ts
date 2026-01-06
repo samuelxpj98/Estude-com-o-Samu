@@ -7,7 +7,7 @@ export enum Screen {
   Study = 'study',
   Stats = 'stats',
   Profile = 'profile',
-  AI = 'ai'
+  Ranking = 'ranking'
 }
 
 export interface UserProfile {
@@ -19,6 +19,13 @@ export interface UserProfile {
   isProfileComplete: boolean;
   email?: string;
   phone?: string;
+}
+
+export interface SRSData {
+  interval: number; // dias
+  ease: number; // ease factor (padrão 2.5)
+  repetitions: number;
+  nextReview: string; // ISO Date
 }
 
 export interface TopicStats {
@@ -48,16 +55,17 @@ export interface Flashcard {
   status?: 'unused' | 'wrong' | 'review' | 'correct';
 }
 
+export interface UserStats {
+  streak: number;
+  lastLoginDate: string;
+  lastAccessTimestamp: number;
+  cardsToday: number;
+  cardsLifetime: number;
+  cardStates: Record<string, SRSData>; // Mapeamento ID do card -> Dados SRS
+}
+
 export interface DailyActivity {
   day: string;
   cards: number;
   isToday?: boolean;
-}
-
-export interface UserStats {
-  streak: number;
-  lastLoginDate: string;
-  lastAccessTimestamp: number; // Novo campo para controle de 30min
-  cardsToday: number;
-  cardsLifetime: number;
 }
