@@ -12,11 +12,60 @@ interface TopicsScreenProps {
   stats: UserStats;
 }
 
+// Definição expandida para facilitar o uso das cores
 export const RANKS = [
-  { name: 'Aspirante', threshold: 0, next: 100, color: 'from-amber-400 to-amber-600', icon: 'auto_awesome', bg: 'bg-amber-500/10', border: 'border-amber-500/20', headerBg: 'bg-gradient-to-br from-amber-500 via-amber-600 to-orange-600' },
-  { name: 'Seminarista', threshold: 100, next: 500, color: 'from-blue-500 to-blue-700', icon: 'school', bg: 'bg-blue-500/10', border: 'border-blue-500/20', headerBg: 'bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800' },
-  { name: 'Bacharel', threshold: 500, next: 2000, color: 'from-emerald-500 to-teal-700', icon: 'history_edu', bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', headerBg: 'bg-gradient-to-br from-emerald-600 via-teal-700 to-cyan-800' },
-  { name: 'Mestre em Teologia', threshold: 2000, next: Infinity, color: 'from-orange-500 to-red-600', icon: 'workspace_premium', bg: 'bg-orange-500/10', border: 'border-orange-500/20', headerBg: 'bg-gradient-to-br from-orange-600 via-red-600 to-red-800' }
+  { 
+    name: 'Aspirante', 
+    threshold: 0, 
+    next: 100, 
+    color: 'text-amber-500', 
+    icon: 'auto_awesome',
+    styles: {
+      bg: 'bg-amber-50 dark:bg-amber-950/30',
+      border: 'border-amber-100 dark:border-amber-900/50',
+      text: 'text-amber-600 dark:text-amber-400',
+      fill: 'bg-amber-500'
+    }
+  },
+  { 
+    name: 'Seminarista', 
+    threshold: 100, 
+    next: 500, 
+    color: 'text-blue-500', 
+    icon: 'school',
+    styles: {
+      bg: 'bg-blue-50 dark:bg-blue-950/30',
+      border: 'border-blue-100 dark:border-blue-900/50',
+      text: 'text-blue-600 dark:text-blue-400',
+      fill: 'bg-blue-500'
+    }
+  },
+  { 
+    name: 'Bacharel', 
+    threshold: 500, 
+    next: 2000, 
+    color: 'text-emerald-500', 
+    icon: 'history_edu',
+    styles: {
+      bg: 'bg-emerald-50 dark:bg-emerald-950/30',
+      border: 'border-emerald-100 dark:border-emerald-900/50',
+      text: 'text-emerald-600 dark:text-emerald-400',
+      fill: 'bg-emerald-500'
+    }
+  },
+  { 
+    name: 'Mestre', 
+    threshold: 2000, 
+    next: Infinity, 
+    color: 'text-red-500', 
+    icon: 'workspace_premium',
+    styles: {
+      bg: 'bg-red-50 dark:bg-red-950/30',
+      border: 'border-red-100 dark:border-red-900/50',
+      text: 'text-red-600 dark:text-red-400',
+      fill: 'bg-red-500'
+    }
+  }
 ];
 
 export const getRank = (lifetime: number) => {
@@ -24,20 +73,20 @@ export const getRank = (lifetime: number) => {
 };
 
 export const SharedHeader: React.FC<{ rank: any, profile: UserProfile, streak: number, onToggleTheme?: () => void, isDarkMode?: boolean }> = ({ rank, profile, streak, onToggleTheme, isDarkMode }) => (
-  <div className={`sticky top-0 z-20 ${rank.headerBg} px-6 py-7 flex items-center justify-between shadow-2xl shadow-black/20 rounded-b-[40px]`}>
+  <div className={`pt-8 pb-4 px-6 flex items-center justify-between sticky top-0 z-20 backdrop-blur-xl border-b transition-colors duration-500 ${rank.styles.bg} ${rank.styles.border}`}>
     <div className="flex items-center gap-4">
       <div 
-        className="size-14 rounded-[22px] flex items-center justify-center text-white text-2xl font-black shadow-2xl ring-4 ring-white/20 transform -rotate-3"
+        className="size-12 rounded-full flex items-center justify-center text-white text-lg font-bold shadow-sm ring-2 ring-white dark:ring-white/10"
         style={{ backgroundColor: profile.avatarColor }}
       >
         {profile.name.charAt(0).toUpperCase()}
       </div>
-      <div className="flex flex-col">
-        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/20 border border-white/20 mb-1.5 backdrop-blur-md">
-           <span className="material-symbols-outlined text-[14px] fill-1 text-white">{rank.icon}</span>
-           <span className="text-[10px] font-black uppercase tracking-widest text-white leading-none">{rank.name}</span>
+      <div>
+        <div className={`flex items-center gap-1 ${rank.styles.text}`}>
+           <span className="material-symbols-outlined text-[14px]">{rank.icon}</span>
+           <p className="text-xs font-black uppercase tracking-wide">{rank.name}</p>
         </div>
-        <h2 className="text-xl font-black tracking-tighter uppercase leading-none text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">
+        <h2 className="text-lg font-bold text-slate-900 dark:text-white leading-none">
           {profile.name}
         </h2>
       </div>
@@ -46,16 +95,16 @@ export const SharedHeader: React.FC<{ rank: any, profile: UserProfile, streak: n
     <div className="flex items-center gap-2">
       <button 
         onClick={onToggleTheme}
-        className="size-11 flex items-center justify-center rounded-full bg-white/10 border border-white/20 text-white active:scale-90 transition-all backdrop-blur-md hover:bg-white/20"
+        className="size-10 flex items-center justify-center rounded-full bg-white/50 dark:bg-black/20 text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-white/10 transition-all backdrop-blur-sm"
       >
-        <span className="material-symbols-outlined text-[24px] fill-1">
+        <span className="material-symbols-outlined text-[20px]">
           {isDarkMode ? 'light_mode' : 'dark_mode'}
         </span>
       </button>
 
-      <div className="flex items-center gap-2 bg-white/20 px-4 py-2.5 rounded-full border border-white/30 backdrop-blur-md shadow-inner">
-        <span className="material-symbols-outlined text-white text-[22px] fill-1 animate-pulse">local_fire_department</span>
-        <span className="text-base font-black text-white">{streak}</span>
+      <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/80 dark:bg-black/40 border border-black/5 dark:border-white/10 shadow-sm backdrop-blur-sm">
+        <span className="material-symbols-outlined text-[18px] fill-1 text-orange-500">local_fire_department</span>
+        <span className="text-sm font-black text-slate-700 dark:text-slate-200">{streak}</span>
       </div>
     </div>
   </div>
@@ -84,84 +133,88 @@ const TopicsScreen: React.FC<TopicsScreenProps> = ({ topics, onSelectStudy, stre
   const categories: string[] = Array.from(new Set(topics.map(t => t.category))).sort() as string[];
 
   return (
-    <div className="flex flex-col h-full bg-background-light dark:bg-background-dark animate-page-transition">
-      <SharedHeader rank={rank} profile={profile} streak={streak} onToggleTheme={onToggleTheme} isDarkMode={isDarkMode} />
+    <div className="flex flex-col h-full bg-white dark:bg-neutral-950">
+      <div className="flex-1 animate-page-transition overflow-y-auto no-scrollbar">
+        <SharedHeader rank={rank} profile={profile} streak={streak} onToggleTheme={onToggleTheme} isDarkMode={isDarkMode} />
 
-      <div className="px-6 pt-10 pb-32">
-        <div className="flex items-end justify-between mb-8">
-          <h1 className="text-4xl font-black leading-[0.85] tracking-tighter uppercase">
-            O que vamos<br/>estudar <span className="text-primary">hoje?</span>
-          </h1>
-          <button 
-            onClick={() => onSelectStudy(null, null, 10, true)}
-            className="flex flex-col items-center gap-2 group"
-          >
-            <div className="size-20 rounded-[28px] bg-red-600 text-white flex items-center justify-center shadow-2xl shadow-red-600/30 group-active:scale-90 transition-all animate-pulse relative overflow-hidden border-4 border-white dark:border-white/5">
-               <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-               <span className="material-symbols-outlined text-4xl fill-1 z-10">gavel</span>
+        <div className="px-6 pt-6 pb-32">
+          {/* Header da Seção */}
+          <div className="flex items-end justify-between mb-8">
+            <div>
+               <h1 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
+                 Estudos
+               </h1>
+               <p className="text-gray-500 text-sm mt-1">Selecione um tópico para iniciar.</p>
             </div>
-            <span className="text-[10px] font-black uppercase text-red-600 tracking-wider">Modo Concílio</span>
-          </button>
-        </div>
-        
-        <div className="mb-8 relative group">
-          <span className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 material-symbols-outlined group-focus-within:text-primary transition-colors">search</span>
-          <input 
-            className="w-full h-16 rounded-[28px] bg-white dark:bg-surface-dark border-none ring-1 ring-gray-100 dark:ring-white/5 shadow-xl shadow-black/5 focus:ring-2 focus:ring-primary pl-14 pr-6 text-base font-medium transition-all" 
-            placeholder="Buscar tópico teológico..." 
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
+            
+            <button 
+              onClick={() => onSelectStudy(null, null, 10, true)}
+              className="flex items-center gap-2 px-4 py-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-full shadow-lg active:scale-95 transition-transform"
+            >
+              <span className="material-symbols-outlined text-lg fill-1">gavel</span>
+              <span className="text-xs font-bold uppercase tracking-wide">Concílio</span>
+            </button>
+          </div>
+          
+          <div className="mb-8 relative">
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 material-symbols-outlined">search</span>
+            <input 
+              className="w-full h-12 rounded-xl bg-gray-50 dark:bg-neutral-900 border-none ring-1 ring-gray-200 dark:ring-white/10 focus:ring-2 focus:ring-primary pl-12 pr-4 text-sm transition-all" 
+              placeholder="Pesquisar..." 
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
 
-        <div className="space-y-4">
-          {categories.map(cat => {
-            const catTopics = filteredTopics.filter(t => t.category === cat);
-            const isExpanded = expandedCategories[cat] || search.length > 0;
-            if (catTopics.length === 0) return null;
+          <div className="space-y-6">
+            {categories.map(cat => {
+              const catTopics = filteredTopics.filter(t => t.category === cat);
+              const isExpanded = expandedCategories[cat] || search.length > 0;
+              if (catTopics.length === 0) return null;
 
-            return (
-              <div key={cat} className="overflow-hidden rounded-[36px] bg-white dark:bg-surface-dark shadow-sm border border-gray-100 dark:border-white/5 transition-all">
-                <button 
-                  onClick={() => toggleCategory(cat)}
-                  className="w-full flex items-center justify-between p-6 bg-gray-50/50 dark:bg-white/5"
-                >
-                  <h3 className="text-slate-900 dark:text-white font-black text-[11px] uppercase tracking-[0.2em]">{cat}</h3>
-                  <span className={`material-symbols-outlined text-gray-400 transition-transform duration-300 ${isExpanded ? 'rotate-180 text-primary' : ''}`}>expand_more</span>
-                </button>
-                
-                {isExpanded && (
-                  <div className="p-4 space-y-1">
-                    {catTopics.map(topic => (
-                      <TopicCard key={topic.id} topic={topic} onSelect={() => setSelectedTopicId(topic.id)} />
-                    ))}
-                  </div>
-                )}
-              </div>
-            );
-          })}
+              return (
+                <div key={cat} className="space-y-3">
+                  <button 
+                    onClick={() => toggleCategory(cat)}
+                    className="w-full flex items-center justify-between py-2 border-b border-gray-100 dark:border-white/5"
+                  >
+                    <h3 className="text-gray-400 text-xs font-bold uppercase tracking-wider">{cat}</h3>
+                    <span className={`material-symbols-outlined text-gray-400 text-lg transition-transform duration-300 ${isExpanded ? 'rotate-180 text-primary' : ''}`}>expand_more</span>
+                  </button>
+                  
+                  {isExpanded && (
+                    <div className="grid grid-cols-1 gap-3">
+                      {catTopics.map(topic => (
+                        <TopicCard key={topic.id} topic={topic} onSelect={() => setSelectedTopicId(topic.id)} rankColor={rank.styles.text} />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
 
+      {/* Minimal Modal */}
       {selectedTopicId && (
-        <div className="fixed inset-0 z-[100] flex items-end justify-center bg-black/60 backdrop-blur-md px-4 pb-12" onClick={() => setSelectedTopicId(null)}>
-          <div className="w-full max-w-sm bg-white dark:bg-surface-dark rounded-[50px] p-10 shadow-2xl animate-page-transition border-t-8 border-primary" onClick={e => e.stopPropagation()}>
-            <div className="flex justify-between items-center mb-8">
-               <h3 className="text-3xl font-black tracking-tighter uppercase">Intensidade</h3>
-               <button onClick={() => setSelectedTopicId(null)} className="size-12 flex items-center justify-center rounded-full bg-gray-100 dark:bg-white/5 active:scale-90">
-                 <span className="material-symbols-outlined text-lg">close</span>
+        <div className="fixed inset-0 z-[100] flex items-end justify-center bg-black/40 backdrop-blur-sm p-4" onClick={() => setSelectedTopicId(null)}>
+          <div className="w-full max-w-sm bg-white dark:bg-neutral-900 rounded-3xl p-6 animate-page-transition shadow-xl ring-1 ring-black/5" onClick={e => e.stopPropagation()}>
+            <div className="flex justify-between items-center mb-6">
+               <h3 className="text-lg font-bold text-slate-900 dark:text-white">Quantidade de Cartões</h3>
+               <button onClick={() => setSelectedTopicId(null)} className="size-8 flex items-center justify-center rounded-full bg-gray-100 dark:bg-white/10">
+                 <span className="material-symbols-outlined text-sm">close</span>
                </button>
             </div>
-            <p className="text-base text-gray-500 dark:text-gray-400 mb-10 font-medium leading-relaxed">Quantos cartões deseja revisar nesta sessão?</p>
-            <div className="grid grid-cols-3 gap-5">
+            <div className="grid grid-cols-3 gap-3">
               {[5, 10, 15].map(limit => (
                 <button
                   key={limit}
                   onClick={() => selectedTopicId && onSelectStudy(selectedTopicId, null, limit, false)}
-                  className="h-24 rounded-[32px] bg-primary hover:bg-blue-600 text-white font-black text-3xl shadow-2xl shadow-primary/30 transition-all active:scale-90 flex items-center justify-center"
+                  className={`h-16 rounded-2xl bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-white/5 transition-all font-bold text-xl flex flex-col items-center justify-center gap-1 group hover:${rank.styles.bg} hover:${rank.styles.text} hover:border-current`}
                 >
-                  {limit}
+                  <span>{limit}</span>
                 </button>
               ))}
             </div>
@@ -172,32 +225,19 @@ const TopicsScreen: React.FC<TopicsScreenProps> = ({ topics, onSelectStudy, stre
   );
 };
 
-const TopicCard: React.FC<{ topic: Topic, onSelect: () => void }> = ({ topic, onSelect }) => {
+const TopicCard: React.FC<{ topic: Topic, onSelect: () => void, rankColor?: string }> = ({ topic, onSelect, rankColor }) => {
   const totalCards = topic.total || 0;
-  const percentage = totalCards > 0 ? Math.round((topic.stats.correct / totalCards) * 100) : 0;
   
-  const colors: Record<string, string> = { 
-    blue: 'text-blue-500 bg-blue-500/10 border-blue-500/20', 
-    emerald: 'text-emerald-500 bg-emerald-500/10 border-emerald-500/20', 
-    purple: 'text-purple-500 bg-purple-500/10 border-purple-500/20' 
-  };
-
   return (
-    <button onClick={onSelect} className="w-full flex items-center justify-between p-5 rounded-[28px] hover:bg-gray-100 dark:hover:bg-white/5 transition-all active:scale-[0.98] group">
-      <div className="flex items-center gap-5">
-        <div className={`size-14 rounded-[20px] flex items-center justify-center border-2 shadow-sm transition-transform group-hover:scale-110 ${colors[topic.color] || colors.blue}`}>
-          <span className="material-symbols-outlined text-2xl">{topic.icon}</span>
-        </div>
-        <div className="text-left">
-          <p className="font-black text-base uppercase tracking-tighter leading-tight mb-1 group-hover:text-primary transition-colors">{topic.name}</p>
-          <div className="flex items-center gap-2.5">
-            <span className="text-[10px] text-gray-400 font-black uppercase tracking-widest">{totalCards} cartões</span>
-            <div className="size-1.5 bg-gray-300 dark:bg-gray-700 rounded-full"></div>
-            <span className="text-[10px] text-primary font-black uppercase tracking-widest">{percentage}% DOMINADO</span>
-          </div>
-        </div>
+    <button onClick={onSelect} className="w-full flex items-center gap-4 p-4 rounded-2xl bg-gray-50 dark:bg-neutral-900/50 hover:bg-white dark:hover:bg-neutral-800 border border-transparent hover:border-gray-200 dark:hover:border-white/10 transition-all group text-left shadow-sm hover:shadow-md">
+      <div className={`size-10 rounded-xl bg-white dark:bg-neutral-800 flex items-center justify-center border border-gray-100 dark:border-white/5 transition-colors group-hover:${rankColor || 'text-primary'}`}>
+        <span className={`material-symbols-outlined text-xl text-gray-400 group-hover:text-inherit`}>{topic.icon}</span>
       </div>
-      <span className="material-symbols-outlined text-gray-300 group-hover:text-primary transition-colors">arrow_forward_ios</span>
+      <div className="flex-1">
+        <p className="font-semibold text-sm text-slate-900 dark:text-white mb-0.5">{topic.name}</p>
+        <p className="text-xs text-gray-500">{totalCards} cartões disponíveis</p>
+      </div>
+      <span className="material-symbols-outlined text-gray-300 text-lg group-hover:translate-x-1 transition-transform">chevron_right</span>
     </button>
   );
 };

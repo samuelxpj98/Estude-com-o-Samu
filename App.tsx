@@ -38,7 +38,8 @@ const App: React.FC = () => {
     lastAccessTimestamp: Date.now(),
     cardsToday: 0, 
     cardsLifetime: 0,
-    cardStates: {}
+    cardStates: {},
+    activityLog: {}
   });
 
   const toggleTheme = () => {
@@ -65,7 +66,7 @@ const App: React.FC = () => {
     return false;
   }, [refreshTopicCounts]);
 
-  // Função robusta de persistência que garante tipos numéricos (crucial para o Ranking)
+  // Função robusta de persistência
   const persistUserData = useCallback(async (uid: string, profile: UserProfile, stats: UserStats, topicsList: Topic[]) => {
     const today = new Date().toISOString().split('T')[0];
     const cleanStats = {
@@ -74,7 +75,8 @@ const App: React.FC = () => {
       cardsLifetime: Number(stats.cardsLifetime) || 0,
       cardsToday: Number(stats.cardsToday) || 0,
       lastLoginDate: stats.lastLoginDate || today,
-      lastAccessTimestamp: Date.now()
+      lastAccessTimestamp: Date.now(),
+      activityLog: stats.activityLog || {}
     };
 
     const cleanProfile = { 
@@ -120,12 +122,14 @@ const App: React.FC = () => {
           lastAccessTimestamp: Date.now(),
           cardsToday: 0, 
           cardsLifetime: 0,
-          cardStates: {} 
+          cardStates: {},
+          activityLog: {}
         };
         
         // Correção de tipos
         statsFromCloud.cardsLifetime = Number(statsFromCloud.cardsLifetime) || 0;
         statsFromCloud.streak = Number(statsFromCloud.streak) || 1;
+        statsFromCloud.activityLog = statsFromCloud.activityLog || {};
 
         let profileFromCloud = cloudData?.profile || { 
           id: u.uid, 
@@ -138,11 +142,14 @@ const App: React.FC = () => {
         
         profileFromCloud.id = u.uid; 
 
-        // Lógica de Ofensiva (Foguinho)
+        // Lógica de Ofensiva e Reset Diário
         const todayStr = new Date().toISOString().split('T')[0];
         const lastDateStr = statsFromCloud.lastLoginDate;
 
         if (lastDateStr !== todayStr) {
+           // Reset diário de cardsToday se virou o dia
+           statsFromCloud.cardsToday = 0;
+
            const yesterday = new Date();
            yesterday.setDate(yesterday.getDate() - 1);
            const yesterdayStr = yesterday.toISOString().split('T')[0];
@@ -168,7 +175,7 @@ const App: React.FC = () => {
         setUserProfile(profileFromCloud);
         setTopics(mergedTopics);
         
-        // Garante que o documento no Firestore seja atualizado para o Ranking
+        // Garante que o documento no Firestore seja atualizado
         await persistUserData(u.uid, profileFromCloud, statsFromCloud, mergedTopics);
         setIsDataReady(true);
       }
@@ -179,6 +186,7 @@ const App: React.FC = () => {
 
   const handleCardReviewed = (cardId: string, topicId: string, status: 'wrong' | 'review' | 'correct') => {
     setUserStats(prev => {
+      const todayKey = new Date().toISOString().split('T')[0];
       const newState = { ...prev.cardStates };
       const current = newState[cardId] || { interval: 0, ease: 2.5, repetitions: 0, nextReview: new Date().toISOString() };
       
@@ -212,12 +220,17 @@ const App: React.FC = () => {
         nextReview: nextReviewDate.toISOString()
       };
 
+      // Atualiza o log de atividade diária
+      const newActivityLog = { ...prev.activityLog };
+      newActivityLog[todayKey] = (newActivityLog[todayKey] || 0) + 1;
+
       return {
         ...prev,
         cardsToday: prev.cardsToday + 1,
         cardsLifetime: prev.cardsLifetime + 1,
         cardStates: newState,
-        lastAccessTimestamp: Date.now()
+        lastAccessTimestamp: Date.now(),
+        activityLog: newActivityLog
       };
     });
     
@@ -271,7 +284,7 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen bg-white dark:bg-background-dark flex flex-col items-center">
       <div className="flex flex-col h-screen w-full max-w-md bg-background-light dark:bg-background-dark relative overflow-hidden font-display antialiased text-slate-900 dark:text-white shadow-[0_0_50px_rgba(0,0,0,0.1)]">
-        <div className="flex-1 overflow-y-auto no-scrollbar">
+        <div className="flex-1 overflow-y-auto no-scrollbar relative">
           {renderScreen()}
         </div>
         {showNav && <NavBar currentScreen={currentScreen} onNavigate={setCurrentScreen} />}

@@ -62,6 +62,7 @@ export interface UserStats {
   cardsToday: number;
   cardsLifetime: number;
   cardStates: Record<string, SRSData>; // Mapeamento ID do card -> Dados SRS
+  activityLog?: Record<string, number>; // Log diário de atividades: "YYYY-MM-DD": count
 }
 
 export interface DailyActivity {

@@ -9,34 +9,34 @@ interface NavBarProps {
 
 const NavBar: React.FC<NavBarProps> = ({ currentScreen, onNavigate }) => {
   return (
-    <div className="sticky bottom-0 w-full bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-lg border-t border-gray-200 dark:border-white/5 z-40 pb-6 pt-3 px-2 flex justify-between items-center shadow-2xl">
+    <div className="sticky bottom-0 w-full bg-white/95 dark:bg-neutral-950/95 backdrop-blur-xl border-t border-gray-100 dark:border-white/5 z-40 pb-5 pt-3 px-2 flex justify-between items-end shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
       <NavItem 
-        label="Estudo" 
         icon="school" 
+        label="Estudos"
         active={currentScreen === Screen.Topics || currentScreen === Screen.Study}
         onClick={() => onNavigate(Screen.Topics)}
       />
       <NavItem 
-        label="Ranking" 
         icon="military_tech" 
+        label="Ranking"
         active={currentScreen === Screen.Ranking}
         onClick={() => onNavigate(Screen.Ranking)}
       />
       <NavItem 
-        label="Níveis" 
         icon="leaderboard" 
+        label="Níveis"
         active={currentScreen === Screen.LevelSelect}
         onClick={() => onNavigate(Screen.LevelSelect)}
       />
       <NavItem 
-        label="Progresso" 
-        icon="bar_chart_4_bars" 
+        icon="bar_chart" 
+        label="Stats"
         active={currentScreen === Screen.Stats}
         onClick={() => onNavigate(Screen.Stats)}
       />
       <NavItem 
-        label="Perfil" 
         icon="person" 
+        label="Perfil"
         active={currentScreen === Screen.Profile}
         onClick={() => onNavigate(Screen.Profile)}
       />
@@ -44,13 +44,17 @@ const NavBar: React.FC<NavBarProps> = ({ currentScreen, onNavigate }) => {
   );
 };
 
-const NavItem: React.FC<{ label: string, icon: string, active: boolean, onClick: () => void }> = ({ label, icon, active, onClick }) => (
+const NavItem: React.FC<{ icon: string, label: string, active: boolean, onClick: () => void }> = ({ icon, label, active, onClick }) => (
   <button 
     onClick={onClick}
-    className={`flex flex-col items-center gap-1 flex-1 transition-all duration-300 active:scale-90 ${active ? 'text-primary' : 'text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300'}`}
+    className={`flex-1 flex flex-col items-center justify-center gap-1 py-1 rounded-2xl transition-all duration-300 active:scale-95 group`}
   >
-    <span className={`material-symbols-outlined transition-all text-[26px] ${active ? 'fill-1 scale-110' : ''}`}>{icon}</span>
-    <span className="text-[8px] font-black uppercase tracking-tighter">{label}</span>
+    <div className={`p-1.5 rounded-xl transition-colors ${active ? 'bg-primary/10 text-primary' : 'text-gray-400 dark:text-neutral-500 group-hover:text-gray-600 dark:group-hover:text-neutral-300'}`}>
+      <span className={`material-symbols-outlined text-[24px] ${active ? 'fill-1' : ''}`}>{icon}</span>
+    </div>
+    <span className={`text-[9px] font-bold uppercase tracking-wide transition-colors ${active ? 'text-primary' : 'text-gray-400 dark:text-neutral-600'}`}>
+      {label}
+    </span>
   </button>
 );
 

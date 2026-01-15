@@ -48,11 +48,14 @@ const LevelSelectScreen: React.FC<LevelSelectScreenProps> = ({ onSelectLevel, pr
               onClick={() => onSelectLevel(lvl, limit)}
               className="group relative flex flex-col items-center justify-center p-8 rounded-[32px] bg-white dark:bg-surface-dark border border-gray-100 dark:border-white/5 hover:border-primary transition-all active:scale-95 shadow-sm overflow-hidden"
             >
-              <div className={`absolute top-0 right-0 p-3 opacity-5 group-hover:opacity-20 transition-opacity bg-gradient-to-br ${rank.color} bg-clip-text text-transparent`}>
+              <div className={`absolute top-0 right-0 p-3 opacity-5 group-hover:opacity-20 transition-opacity ${rank.color}`}>
                  <span className="material-symbols-outlined text-5xl">stairs</span>
               </div>
               <p className="text-gray-400 text-[10px] font-black uppercase tracking-widest mb-1">NÍVEL</p>
-              <span className={`text-5xl font-black transition-transform group-hover:scale-110 duration-500 ${limit > 0 ? `bg-gradient-to-br ${rank.color} bg-clip-text text-transparent` : 'text-slate-800'}`}>{lvl}</span>
+              {/* O número agora usa a cor da patente (rank.color) */}
+              <span className={`text-5xl font-black transition-transform group-hover:scale-110 duration-500 ${rank.color}`}>
+                {lvl}
+              </span>
             </button>
           ))}
         </div>

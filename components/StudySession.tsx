@@ -29,12 +29,36 @@ const StudySession: React.FC<StudySessionProps> = ({ topicId, level, limit, allC
     const sorted = [...filtered].sort((a, b) => {
       const stateA = cardStates[a.id];
       const stateB = cardStates[b.id];
-      const dateA = stateA ? new Date(stateA.nextReview).getTime() : 0;
-      const dateB = stateB ? new Date(stateB.nextReview).getTime() : 0;
-      return dateA - dateB;
+
+      // Prioridade 0: Novos (Sem registro no SRS)
+      // Prioridade 1: Errados (Intervalo zerado)
+      // Prioridade 2: Revisão/Corretos (Com intervalo > 0)
+      const getPriority = (state: SRSData | undefined) => {
+        if (!state) return 0; 
+        if (state.interval === 0) return 1;
+        return 2;
+      };
+
+      const pA = getPriority(stateA);
+      const pB = getPriority(stateB);
+
+      // 1. Ordena pela categoria de prioridade
+      if (pA !== pB) return pA - pB;
+
+      // 2. Se ambos tiverem estado (empate em prioridade 1 ou 2), ordena pela data (mais atrasados primeiro)
+      if (stateA && stateB) {
+        const dateA = new Date(stateA.nextReview).getTime();
+        const dateB = new Date(stateB.nextReview).getTime();
+        return dateA - dateB;
+      }
+
+      return 0;
     });
 
+    // Seleciona os top cards baseados na prioridade rigorosa
     const limited = sorted.slice(0, limit);
+    
+    // Embaralha apenas o lote selecionado para dinamismo na sessão
     const shuffled = [...limited].sort(() => Math.random() - 0.5);
     setSessionCards(shuffled);
   }, [topicId, level, limit, allCards, cardStates]);
